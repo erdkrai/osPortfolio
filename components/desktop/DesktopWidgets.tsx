@@ -28,14 +28,16 @@ function ClockWidget() {
         day: "numeric"
     });
 
+    const [client, setClient] = useState(false);
+    useEffect(() => setClient(true), []);
     return (
         <div className="flex flex-col items-end text-white drop-shadow-lg">
             <div className="text-6xl font-bold tracking-tight mono-font">
-                {formattedTime}
+                {client ? formattedTime : ""}
                 <span className="text-xl opacity-50 ml-2 uppercase tracking-widest font-medium">IST</span>
             </div>
             <div className="text-lg opacity-80 font-medium mt-1">
-                {formattedDate}
+                {client ? formattedDate : ""}
             </div>
         </div>
     );
