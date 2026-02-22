@@ -11,11 +11,15 @@ export function Badge({ label, variant = "default", className }: BadgeProps) {
         <span
             className={clsx(
                 "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium",
-                variant === "default" && "bg-white/10 text-white/70",
-                variant === "accent" && "bg-indigo-500/20 text-indigo-300",
-                variant === "green" && "bg-emerald-500/20 text-emerald-300",
                 className
             )}
+            style={
+                variant === "accent"
+                    ? { background: "var(--accent-subtle)", color: "var(--accent-color)" }
+                    : variant === "green"
+                        ? { background: "rgba(39,174,96,0.12)", color: "#27ae60" }
+                        : { background: "var(--card-bg)", color: "var(--text-secondary)" }
+            }
         >
             {label}
         </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { clsx } from "clsx";
 
@@ -166,6 +166,143 @@ function WeatherWidget() {
     );
 }
 
+// --- System Monitor Widget ---------------------------------------------------
+
+function drift(prev: number, min: number, max: number, speed = 0.08, jitter = 1.5): number {
+    const target = min + Math.random() * (max - min);
+    const next = prev + (target - prev) * speed + (Math.random() - 0.5) * jitter;
+    return Math.max(min, Math.min(max, next));
+}
+
+const SPARK_LEN = 30;
+
+function drawSparkline(
+    canvas: HTMLCanvasElement,
+    data: number[],
+    color: string,
+    fill: string,
+    max = 100,
+) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    if (data.length < 2) return;
+    const step = w / (data.length - 1);
+
+    // Fill area
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    data.forEach((v, i) => ctx.lineTo(i * step, h - (v / max) * h));
+    ctx.lineTo(w, h);
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+
+    // Stroke
+    ctx.beginPath();
+    data.forEach((v, i) => {
+        const x = i * step;
+        const y = h - (v / max) * h;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+}
+
+function SystemMonitorWidget() {
+    const cores = typeof navigator !== "undefined" && navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4;
+    // @ts-expect-error — deviceMemory is Chromium-only
+    const totalMemGB = typeof navigator !== "undefined" && navigator.deviceMemory ? navigator.deviceMemory : 8;
+
+    const cpuRef = useRef(30);
+    const memRef = useRef(42);
+    const netRef = useRef(80);
+
+    const [cpuHistory, setCpuHistory] = useState<number[]>(() => Array(SPARK_LEN).fill(30));
+    const [memHistory, setMemHistory] = useState<number[]>(() => Array(SPARK_LEN).fill(42));
+    const [netHistory, setNetHistory] = useState<number[]>(() => Array(SPARK_LEN).fill(80));
+
+    const [cpu, setCpu] = useState(30);
+    const [mem, setMem] = useState(42);
+    const [net, setNet] = useState(80);
+
+    const cpuCanvas = useRef<HTMLCanvasElement>(null);
+    const memCanvas = useRef<HTMLCanvasElement>(null);
+    const netCanvas = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const id = setInterval(() => {
+            cpuRef.current = drift(cpuRef.current, 6, 78, 0.12, 2.5);
+            memRef.current = drift(memRef.current, 28, 68, 0.04, 0.5);
+            netRef.current = drift(netRef.current, 10, 600, 0.15, 25);
+
+            setCpu(cpuRef.current);
+            setMem(memRef.current);
+            setNet(netRef.current);
+
+            setCpuHistory((p) => [...p.slice(1), cpuRef.current]);
+            setMemHistory((p) => [...p.slice(1), memRef.current]);
+            setNetHistory((p) => [...p.slice(1), netRef.current]);
+        }, 1000);
+        return () => clearInterval(id);
+    }, []);
+
+    // Draw sparklines
+    useEffect(() => {
+        if (cpuCanvas.current) drawSparkline(cpuCanvas.current, cpuHistory, "#3584e4", "rgba(53,132,228,0.18)");
+        if (memCanvas.current) drawSparkline(memCanvas.current, memHistory, "#33d17a", "rgba(51,209,122,0.15)");
+        if (netCanvas.current) drawSparkline(netCanvas.current, netHistory, "#e5a50a", "rgba(229,165,10,0.15)", 700);
+    }, [cpuHistory, memHistory, netHistory]);
+
+    const usedGB = ((mem / 100) * totalMemGB).toFixed(1);
+    const netLabel = net >= 1024 ? `${(net / 1024).toFixed(1)} MB/s` : `${net.toFixed(0)} KB/s`;
+
+    const rows: { label: string; value: string; color: string; canvas: React.RefObject<HTMLCanvasElement | null>; sub: string }[] = [
+        { label: "CPU", value: `${cpu.toFixed(1)}%`, color: "#3584e4", canvas: cpuCanvas, sub: `${cores} cores` },
+        { label: "Memory", value: `${usedGB} GB`, color: "#33d17a", canvas: memCanvas, sub: `${mem.toFixed(0)}% of ${totalMemGB} GB` },
+        { label: "Network", value: netLabel, color: "#e5a50a", canvas: netCanvas, sub: "↓ receiving" },
+    ];
+
+    return (
+        <div className="p-4 rounded-2xl bg-black/20 backdrop-blur-md border border-white/10 text-white w-64 shadow-xl">
+            <div className="flex items-center gap-2 mb-3">
+                <svg viewBox="0 0 20 20" className="w-4 h-4 opacity-60" fill="none">
+                    <rect x="1" y="3" width="18" height="13" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                    <polyline points="4,12 7,9 10,11 13,6 16,8" stroke="#33d17a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+                <span className="text-[11px] font-semibold uppercase tracking-widest opacity-60">System Monitor</span>
+            </div>
+            <div className="flex flex-col gap-3">
+                {rows.map((r) => (
+                    <div key={r.label}>
+                        <div className="flex items-center justify-between mb-1">
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-sm" style={{ background: r.color }} />
+                                <span className="text-[11px] font-medium opacity-80">{r.label}</span>
+                            </div>
+                            <span className="text-[13px] font-bold tabular-nums" style={{ color: r.color }}>{r.value}</span>
+                        </div>
+                        <div className="w-full h-8 rounded-md overflow-hidden bg-white/5 border border-white/5">
+                            <canvas ref={r.canvas} className="w-full h-full" />
+                        </div>
+                        <div className="text-[9px] opacity-35 mt-0.5">{r.sub}</div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
 // --- Main Container ---------------------------------------------------------
 export function DesktopWidgets() {
     return (
@@ -178,6 +315,7 @@ export function DesktopWidgets() {
             <div className="flex flex-col gap-6">
                 <WeatherWidget />
                 <CalendarWidget />
+                <SystemMonitorWidget />
             </div>
         </motion.div>
     );

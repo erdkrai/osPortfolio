@@ -1,11 +1,11 @@
 import { AppId, useWindowStore } from "@/store/windows";
 import { AboutApp } from "@/components/apps/AboutApp";
 import { ProjectsApp } from "@/components/apps/ProjectsApp";
-import { ContactApp } from "@/components/apps/ContactApp";
 import { TerminalApp } from "@/components/apps/TerminalApp";
 import { PreviewApp } from "@/components/apps/PreviewApp";
 import { SettingsApp } from "@/components/apps/SettingsApp";
 import { PhotosApp } from "@/components/apps/PhotosApp";
+import { GamesApp } from "@/components/apps/GamesApp";
 import { SnakeApp } from "@/components/apps/SnakeApp";
 import { TetrisApp } from "@/components/apps/TetrisApp";
 import { MinesweeperApp } from "@/components/apps/MinesweeperApp";
@@ -22,8 +22,7 @@ export function AppRenderer({ appId, windowId }: AppRendererProps) {
             return <AboutApp />;
         case "projects":
             return <ProjectsApp />;
-        case "contact":
-            return <ContactApp />;
+
         case "terminal":
             return <TerminalApp />;
         case "preview":
@@ -34,6 +33,8 @@ export function AppRenderer({ appId, windowId }: AppRendererProps) {
         }
         case "photos":
             return <PhotosApp />;
+        case "games":
+            return <GamesApp />;
         case "snake":
             return <SnakeApp />;
         case "tetris":

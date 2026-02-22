@@ -24,13 +24,10 @@ export const APPS: AppConfig[] = [
     { appId: "about", title: "About Me", icon: "about", defaultSize: { w: 560, h: 500 } },
     { appId: "projects", title: "Projects", icon: "projects", defaultSize: { w: 900, h: 620 } },
     { appId: "resume", title: "Resume", icon: "resume", defaultSize: { w: 800, h: 640 } },
-    { appId: "contact", title: "Contact", icon: "contact", defaultSize: { w: 540, h: 580 } },
     { appId: "terminal", title: "Terminal", icon: "terminal", defaultSize: { w: 720, h: 480 } },
     { appId: "settings", title: "Settings", icon: "settings", defaultSize: { w: 900, h: 600 } },
     { appId: "photos", title: "Photos", icon: "photos", defaultSize: { w: 900, h: 640 } },
-    { appId: "snake", title: "Snake", icon: "snake", defaultSize: { w: 480, h: 560 } },
-    { appId: "tetris", title: "Tetris", icon: "tetris", defaultSize: { w: 420, h: 620 } },
-    { appId: "minesweeper", title: "Mines", icon: "minesweeper", defaultSize: { w: 480, h: 560 } },
+    { appId: "games", title: "Files", icon: "games", defaultSize: { w: 740, h: 520 } },
     { appId: "music", title: "Music", icon: "music", defaultSize: { w: 580, h: 640 } },
 ];
 

@@ -63,18 +63,6 @@ const getDockIcons = (iconSizeClass: string): Record<string, React.ReactNode> =>
             </defs>
         </svg>
     ),
-    contact: (
-        <svg viewBox="0 0 48 48" fill="none" className={iconSizeClass}>
-            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#d-con)" />
-            <rect x="8" y="12" width="32" height="24" rx="4" fill="white" />
-            <path d="M8 14l16 11 16-11" stroke="url(#d-con)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            <defs>
-                <linearGradient id="d-con" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#3584e4" /><stop offset="1" stopColor="#1a5fb4" />
-                </linearGradient>
-            </defs>
-        </svg>
-    ),
     terminal: (
         <svg viewBox="0 0 48 48" fill="none" className={iconSizeClass}>
             <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#d-term)" />
@@ -116,6 +104,21 @@ const getDockIcons = (iconSizeClass: string): Record<string, React.ReactNode> =>
             <defs>
                 <linearGradient id="d-photos" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
                     <stop stopColor="#26a269" /><stop offset="1" stopColor="#1a8553" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ),
+    games: (
+        <svg viewBox="0 0 48 48" fill="none" className={iconSizeClass}>
+            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#d-games)" />
+            <path d="M8 14a2 2 0 012-2h8.5a2 2 0 011.6.8L22 15h16a2 2 0 012 2v17a2 2 0 01-2 2H10a2 2 0 01-2-2V14z" fill="white" fillOpacity="0.9" />
+            <rect x="17" y="22" width="14" height="9" rx="3" fill="#5e5c64" />
+            <circle cx="21" cy="26" r="1.2" fill="white" />
+            <circle cx="27" cy="26" r="1.2" fill="white" />
+            <rect x="23" y="24.5" width="2" height="3" rx="1" fill="white" fillOpacity="0.5" />
+            <defs>
+                <linearGradient id="d-games" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#613583" /><stop offset="1" stopColor="#462a63" />
                 </linearGradient>
             </defs>
         </svg>

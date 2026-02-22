@@ -149,11 +149,11 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
     }, []);
 
     return (
-        <div className="flex h-full w-full bg-[#1e1e1e] text-white overflow-hidden">
+        <div className="flex h-full w-full overflow-hidden" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)" }}>
             {/* Desktop Sidebar */}
             {!isMobile && (
-                <div className="w-56 min-w-56 bg-[#2d2d2d] border-r border-white/5 flex flex-col shrink-0">
-                    <div className="p-4 border-b border-white/5">
+                <div className="w-56 min-w-56 flex flex-col shrink-0" style={{ background: "var(--bg-primary)", borderRight: "1px solid var(--border-color)" }}>
+                    <div className="p-4" style={{ borderBottom: "1px solid var(--border-color)" }}>
                         <h1 className="text-lg font-semibold">Settings</h1>
                     </div>
                     <nav className="flex-1 p-2">
@@ -162,11 +162,15 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
                                 className={clsx(
-                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-left",
-                                    activeTab === item.id
-                                        ? "bg-[#E95420]/20 text-[#E95420]"
-                                        : "hover:bg-white/5 text-white/70 hover:text-white"
+                                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors text-left"
                                 )}
+                                style={
+                                    activeTab === item.id
+                                        ? { background: "var(--accent-subtle)", color: "var(--accent-color)" }
+                                        : { color: "var(--text-secondary)" }
+                                }
+                                onMouseEnter={(e) => { if (activeTab !== item.id) (e.currentTarget as HTMLElement).style.background = "var(--hover-bg)"; }}
+                                onMouseLeave={(e) => { if (activeTab !== item.id) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                             >
                                 {getIconComponent(item.id)}
                                 {item.label}
@@ -180,7 +184,7 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Mobile Header */}
                 {isMobile && (
-                    <div className="p-4 border-b border-white/5 bg-[#2d2d2d] shrink-0">
+                    <div className="p-4 shrink-0" style={{ borderBottom: "1px solid var(--border-color)", background: "var(--bg-primary)" }}>
                         <h1 className="text-lg font-semibold">Settings</h1>
                     </div>
                 )}
@@ -192,7 +196,7 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                             <>
                                 <div className="mb-6 md:mb-8">
                                     <h2 className="text-xl md:text-2xl font-semibold mb-1">Background</h2>
-                                    <p className="text-white/50 text-sm">Change your desktop wallpaper</p>
+                                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>Change your desktop wallpaper</p>
                                 </div>
 
                                 <h3 className="text-xs md:text-sm font-semibold opacity-50 uppercase tracking-widest mb-4">Wallpapers</h3>
@@ -203,8 +207,15 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                             onClick={() => { setWallpaper(wp.url); }}
                                             className={clsx(
                                                 "group relative aspect-video rounded-xl overflow-hidden border-2 transition-all",
-                                                wallpaper === wp.url ? "border-[#E95420] ring-2 ring-[#E95420]/30" : "border-transparent hover:border-white/20"
+                                                wallpaper === wp.url ? "ring-2" : ""
                                             )}
+                                            style={
+                                                wallpaper === wp.url
+                                                    ? { borderColor: "var(--accent-color)", boxShadow: "0 0 0 2px color-mix(in srgb, var(--accent-color) 30%, transparent)" }
+                                                    : { borderColor: "transparent" }
+                                            }
+                                            onMouseEnter={(e) => { if (wallpaper !== wp.url) e.currentTarget.style.borderColor = "var(--border-color)"; }}
+                                            onMouseLeave={(e) => { if (wallpaper !== wp.url) e.currentTarget.style.borderColor = "transparent"; }}
                                         >
                                             {wp.url ? (
                                                 wp.url.startsWith("linear-gradient") || wp.url.startsWith("radial-gradient") ? (
@@ -224,7 +235,7 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                                 <p className="text-xs font-medium truncate">{wp.name}</p>
                                             </div>
                                             {wallpaper === wp.url && (
-                                                <div className="absolute top-2 right-2 w-5 h-5 bg-[#E95420] rounded-full flex items-center justify-center shadow-lg">
+                                                <div className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center shadow-lg" style={{ background: "var(--accent-color)" }}>
                                                     <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                                                     </svg>
@@ -240,7 +251,7 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                             <>
                                 <div className="mb-6 md:mb-8">
                                     <h2 className="text-xl md:text-2xl font-semibold mb-1">Appearance</h2>
-                                    <p className="text-white/50 text-sm">Customize the look and feel</p>
+                                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>Customize the look and feel</p>
                                 </div>
 
                                 <div className="space-y-6 md:space-y-8">
@@ -251,9 +262,13 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                             <button
                                                 onClick={() => { setTheme("light"); }}
                                                 className={clsx(
-                                                    "flex flex-col gap-3 group items-center p-3 md:p-4 rounded-xl border-2 transition-all",
-                                                    theme === "light" ? "border-[#E95420] bg-[#E95420]/5" : "border-transparent hover:border-white/10"
+                                                    "flex flex-col gap-3 group items-center p-3 md:p-4 rounded-xl border-2 transition-all"
                                                 )}
+                                                style={
+                                                    theme === "light"
+                                                        ? { borderColor: "var(--accent-color)", background: "var(--accent-muted)" }
+                                                        : { borderColor: "transparent" }
+                                                }
                                             >
                                                 <div className="w-20 md:w-24 aspect-video bg-white rounded-lg border border-gray-200 overflow-hidden p-2 shadow-sm">
                                                     <div className="w-full h-2 bg-gray-200 rounded-full mb-1" />
@@ -267,9 +282,13 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                             <button
                                                 onClick={() => { setTheme("dark"); }}
                                                 className={clsx(
-                                                    "flex flex-col gap-3 group items-center p-3 md:p-4 rounded-xl border-2 transition-all",
-                                                    theme === "dark" ? "border-[#E95420] bg-[#E95420]/5" : "border-transparent hover:border-white/10"
+                                                    "flex flex-col gap-3 group items-center p-3 md:p-4 rounded-xl border-2 transition-all"
                                                 )}
+                                                style={
+                                                    theme === "dark"
+                                                        ? { borderColor: "var(--accent-color)", background: "var(--accent-muted)" }
+                                                        : { borderColor: "transparent" }
+                                                }
                                             >
                                                 <div className="w-20 md:w-24 aspect-video bg-[#2d2d2d] rounded-lg border border-white/10 overflow-hidden p-2 shadow-sm">
                                                     <div className="w-full h-2 bg-white/10 rounded-full mb-1" />
@@ -293,9 +312,13 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                                     onClick={() => { setAccentColor(color.value); }}
                                                     className={clsx(
                                                         "group relative w-12 h-12 rounded-full transition-all",
-                                                        accentColor === color.value ? "ring-2 ring-white ring-offset-2 ring-offset-[#1e1e1e] scale-110" : "hover:scale-105"
+                                                        accentColor === color.value ? "ring-2 ring-offset-2 scale-110" : "hover:scale-105"
                                                     )}
-                                                    style={{ backgroundColor: color.value }}
+                                                    style={
+                                                        accentColor === color.value
+                                                            ? { backgroundColor: color.value, boxShadow: `0 0 0 2px var(--bg-secondary), 0 0 0 4px ${color.value}` }
+                                                            : { backgroundColor: color.value }
+                                                    }
                                                     title={color.name}
                                                 >
                                                     {accentColor === color.value && (
@@ -315,22 +338,22 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                             <>
                                 <div className="mb-6 md:mb-8">
                                     <h2 className="text-xl md:text-2xl font-semibold mb-1">Desktop</h2>
-                                    <p className="text-white/50 text-sm">Manage your desktop icons and behavior</p>
+                                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>Manage your desktop icons and behavior</p>
                                 </div>
 
                                 <div className="space-y-6">
                                     {/* Show Desktop Icons */}
-                                    <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: "var(--card-bg)" }}>
                                         <div>
                                             <p className="font-medium">Show Desktop Icons</p>
-                                            <p className="text-sm text-white/50">Display app icons on the desktop</p>
+                                            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Display app icons on the desktop</p>
                                         </div>
                                         <button
                                             onClick={() => { setShowDesktopIcons(!showDesktopIcons); }}
                                             className={clsx(
-                                                "relative w-12 h-6 rounded-full transition-colors shrink-0",
-                                                showDesktopIcons ? "bg-[#E95420]" : "bg-white/20"
+                                                "relative w-12 h-6 rounded-full transition-colors shrink-0"
                                             )}
+                                            style={{ background: showDesktopIcons ? "var(--accent-color)" : "var(--card-bg)" }}
                                         >
                                             <div
                                                 className={clsx(
@@ -344,18 +367,20 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                     {/* Icon Size */}
                                     <div>
                                         <p className="font-medium mb-2">Icon Size</p>
-                                        <p className="text-sm text-white/50 mb-4">Choose the size of desktop icons</p>
+                                        <p className="text-sm mb-4" style={{ color: "var(--text-muted)" }}>Choose the size of desktop icons</p>
                                         <div className="flex gap-3 flex-wrap">
                                             {(Object.keys({ small: null, medium: null, large: null }) as IconSize[]).map((size) => (
                                                 <button
                                                     key={size}
                                                     onClick={() => { setIconSize(size); }}
                                                     className={clsx(
-                                                        "px-4 py-2 rounded-lg border capitalize transition-all",
-                                                        iconSize === size
-                                                            ? "border-[#E95420] bg-[#E95420]/10 text-[#E95420]"
-                                                            : "border-white/10 hover:border-white/20"
+                                                        "px-4 py-2 rounded-lg border capitalize transition-all"
                                                     )}
+                                                    style={
+                                                        iconSize === size
+                                                            ? { borderColor: "var(--accent-color)", background: "var(--accent-muted)", color: "var(--accent-color)" }
+                                                            : { borderColor: "var(--border-color)" }
+                                                    }
                                                 >
                                                     {size}
                                                 </button>
@@ -370,25 +395,27 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                             <>
                                 <div className="mb-6 md:mb-8">
                                     <h2 className="text-xl md:text-2xl font-semibold mb-1">Dock</h2>
-                                    <p className="text-white/50 text-sm">Configure dock behavior and appearance</p>
+                                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>Configure dock behavior and appearance</p>
                                 </div>
 
                                 <div className="space-y-6">
                                     {/* Dock Position */}
                                     <div>
                                         <p className="font-medium mb-2">Position</p>
-                                        <p className="text-sm text-white/50 mb-4">Choose where the dock appears</p>
+                                        <p className="text-sm mb-4" style={{ color: "var(--text-muted)" }}>Choose where the dock appears</p>
                                         <div className="flex gap-3 flex-wrap">
                                             {(["bottom", "left", "right"] as DockPosition[]).map((position) => (
                                                 <button
                                                     key={position}
                                                     onClick={() => { setDockPosition(position); }}
                                                     className={clsx(
-                                                        "px-4 py-2 rounded-lg border capitalize transition-all",
-                                                        dockPosition === position
-                                                            ? "border-[#E95420] bg-[#E95420]/10 text-[#E95420]"
-                                                            : "border-white/10 hover:border-white/20"
+                                                        "px-4 py-2 rounded-lg border capitalize transition-all"
                                                     )}
+                                                    style={
+                                                        dockPosition === position
+                                                            ? { borderColor: "var(--accent-color)", background: "var(--accent-muted)", color: "var(--accent-color)" }
+                                                            : { borderColor: "var(--border-color)" }
+                                                    }
                                                 >
                                                     {position}
                                                 </button>
@@ -397,17 +424,17 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                     </div>
 
                                     {/* Dock Auto Hide */}
-                                    <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: "var(--card-bg)" }}>
                                         <div>
                                             <p className="font-medium">Auto-hide Dock</p>
-                                            <p className="text-sm text-white/50">Hide dock when not in use</p>
+                                            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Hide dock when not in use</p>
                                         </div>
                                         <button
                                             onClick={() => { setDockAutoHide(!dockAutoHide); }}
                                             className={clsx(
-                                                "relative w-12 h-6 rounded-full transition-colors shrink-0",
-                                                dockAutoHide ? "bg-[#E95420]" : "bg-white/20"
+                                                "relative w-12 h-6 rounded-full transition-colors shrink-0"
                                             )}
+                                            style={{ background: dockAutoHide ? "var(--accent-color)" : "var(--card-bg)" }}
                                         >
                                             <div
                                                 className={clsx(
@@ -421,7 +448,7 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                     {/* Dock Icon Size */}
                                     <div>
                                         <p className="font-medium mb-2">Icon Size</p>
-                                        <p className="text-sm text-white/50 mb-4">Adjust the size of dock icons</p>
+                                        <p className="text-sm mb-4" style={{ color: "var(--text-muted)" }}>Adjust the size of dock icons</p>
                                         <div className="flex items-center gap-4">
                                             <input
                                                 type="range"
@@ -430,7 +457,8 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                                 step="4"
                                                 value={dockIconSize}
                                                 onChange={(e) => { setDockIconSize(Number(e.target.value)); }}
-                                                className="flex-1 h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#E95420]"
+                                                className="flex-1 h-2 rounded-lg appearance-none cursor-pointer"
+                                                style={{ background: "var(--card-bg)", accentColor: "var(--accent-color)" }}
                                             />
                                             <span className="text-sm font-medium w-12 text-right shrink-0">{dockIconSize}px</span>
                                         </div>
@@ -443,22 +471,22 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                             <>
                                 <div className="mb-6 md:mb-8">
                                     <h2 className="text-xl md:text-2xl font-semibold mb-1">Sound</h2>
-                                    <p className="text-white/50 text-sm">System sounds and notifications</p>
+                                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>System sounds and notifications</p>
                                 </div>
 
                                 <div className="space-y-6">
                                     {/* Sound Effects */}
-                                    <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: "var(--card-bg)" }}>
                                         <div>
                                             <p className="font-medium">Sound Effects</p>
-                                            <p className="text-sm text-white/50">Play sounds for system events</p>
+                                            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Play sounds for system events</p>
                                         </div>
                                         <button
                                             onClick={() => { setSoundEffects(!soundEffects); }}
                                             className={clsx(
-                                                "relative w-12 h-6 rounded-full transition-colors shrink-0",
-                                                soundEffects ? "bg-[#E95420]" : "bg-white/20"
+                                                "relative w-12 h-6 rounded-full transition-colors shrink-0"
                                             )}
+                                            style={{ background: soundEffects ? "var(--accent-color)" : "var(--card-bg)" }}
                                         >
                                             <div
                                                 className={clsx(
@@ -470,17 +498,17 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                     </div>
 
                                     {/* Notifications */}
-                                    <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                    <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: "var(--card-bg)" }}>
                                         <div>
                                             <p className="font-medium">Notification Sounds</p>
-                                            <p className="text-sm text-white/50">Play sound when receiving notifications</p>
+                                            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Play sound when receiving notifications</p>
                                         </div>
                                         <button
                                             onClick={() => setNotifications(!notifications)}
                                             className={clsx(
-                                                "relative w-12 h-6 rounded-full transition-colors shrink-0",
-                                                notifications ? "bg-[#E95420]" : "bg-white/20"
+                                                "relative w-12 h-6 rounded-full transition-colors shrink-0"
                                             )}
+                                            style={{ background: notifications ? "var(--accent-color)" : "var(--card-bg)" }}
                                         >
                                             <div
                                                 className={clsx(
@@ -498,11 +526,11 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                             <>
                                 <div className="mb-6 md:mb-8">
                                     <h2 className="text-xl md:text-2xl font-semibold mb-1">About</h2>
-                                    <p className="text-white/50 text-sm">System information</p>
+                                    <p className="text-sm" style={{ color: "var(--text-muted)" }}>System information</p>
                                 </div>
 
                                 <div className="flex flex-col items-center py-4 md:py-8">
-                                    <div className="w-24 h-24 md:w-28 md:h-28 mb-4 md:mb-6 rounded-3xl bg-gradient-to-br from-[#E95420] to-[#772953] flex items-center justify-center p-4 md:p-6 shadow-2xl">
+                                    <div className="w-24 h-24 md:w-28 md:h-28 mb-4 md:mb-6 rounded-3xl flex items-center justify-center p-4 md:p-6 shadow-2xl" style={{ background: `linear-gradient(135deg, var(--accent-color), #772953)` }}>
                                         <svg viewBox="0 0 24 24" className="w-full h-full text-white" fill="none" stroke="currentColor" strokeWidth="1.5">
                                             <circle cx="12" cy="12" r="10" />
                                             <circle cx="12" cy="12" r="3" />
@@ -515,7 +543,7 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                         </svg>
                                     </div>
                                     <h3 className="text-xl md:text-2xl font-bold mb-1">Ubuntu UI Portfolio</h3>
-                                    <p className="text-white/40 text-sm mb-6 md:mb-8">Version 2026.02.22 (LTS Compatible)</p>
+                                    <p className="text-sm mb-6 md:mb-8" style={{ color: "var(--text-muted)" }}>Version 2026.02.22 (LTS Compatible)</p>
 
                                     <div className="w-full max-w-sm md:max-w-md space-y-2">
                                         {[
@@ -526,8 +554,8 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
                                             { k: "OS Type", v: "64-bit Web Native" },
                                             { k: "Disk", v: "256 GB SSD" },
                                         ].map((row) => (
-                                            <div key={row.k} className="flex items-center justify-between p-3 bg-white/5 rounded-lg text-sm">
-                                                <span className="text-white/50">{row.k}</span>
+                                            <div key={row.k} className="flex items-center justify-between p-3 rounded-lg text-sm" style={{ background: "var(--card-bg)" }}>
+                                                <span style={{ color: "var(--text-muted)" }}>{row.k}</span>
                                                 <span className="font-medium">{row.v}</span>
                                             </div>
                                         ))}
@@ -547,18 +575,16 @@ export function SettingsApp({ initialTab }: { initialTab?: string }) {
 
                 {/* Mobile Bottom Tab Bar */}
                 {isMobile && (
-                    <div className="shrink-0 bg-[#2d2d2d] border-t border-white/5">
+                    <div className="shrink-0" style={{ background: "var(--bg-primary)", borderTop: "1px solid var(--border-color)" }}>
                         <div className="flex justify-around py-2">
                             {sidebarItems.map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => setActiveTab(item.id)}
                                     className={clsx(
-                                        "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors",
-                                        activeTab === item.id
-                                            ? "text-[#E95420]"
-                                            : "text-white/50 hover:text-white"
+                                        "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors"
                                     )}
+                                    style={{ color: activeTab === item.id ? "var(--accent-color)" : "var(--text-muted)" }}
                                 >
                                     <div className="w-5 h-5">
                                         {getIconComponent(item.id)}

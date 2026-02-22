@@ -13,7 +13,7 @@ export function PreviewApp({ windowId }: PreviewAppProps) {
 
     if (!previewData) {
         return (
-            <div className="flex items-center justify-center h-full text-white/40">
+            <div className="flex items-center justify-center h-full" style={{ color: "var(--text-muted)" }}>
                 No preview data available
             </div>
         );
@@ -22,21 +22,29 @@ export function PreviewApp({ windowId }: PreviewAppProps) {
     const { type, url } = previewData;
 
     return (
-        <div className="flex flex-col h-full bg-[#1e1e1e] text-white selection:bg-orange-500/30">
+        <div className="flex flex-col h-full selection:bg-orange-500/30" style={{ background: "var(--bg-secondary)", color: "var(--text-primary)" }}>
             {/* Toolbar (macOS Quick Look / Eye of GNOME style) */}
-            <div className="flex items-center justify-between px-4 py-2 bg-[#2d2d2d] border-b border-black/20 shrink-0">
-                <div className="text-xs font-medium text-white/60 truncate max-w-[200px]">
+            <div
+                className="flex items-center justify-between px-4 py-2 shrink-0"
+                style={{ background: "var(--bg-primary)", borderBottom: "1px solid var(--border-color)" }}
+            >
+                <div className="text-xs font-medium truncate max-w-[200px]" style={{ color: "var(--text-secondary)" }}>
                     {windowState.title}
                 </div>
                 <div className="flex items-center gap-2">
-                    <button className="p-1 px-2 hover:bg-white/10 rounded text-[10px] font-bold text-white/80 transition-colors uppercase tracking-tight">
+                    <button
+                        className="p-1 px-2 rounded text-[10px] font-bold transition-colors uppercase tracking-tight"
+                        style={{ color: "var(--text-secondary)" }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--hover-bg)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                    >
                         Details
                     </button>
                 </div>
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 relative overflow-auto flex items-center justify-center bg-black/20">
+            <div className="flex-1 relative overflow-auto flex items-center justify-center" style={{ background: "var(--card-bg)" }}>
                 {type === "image" && (
                     <img
                         src={url}
@@ -64,7 +72,10 @@ export function PreviewApp({ windowId }: PreviewAppProps) {
             </div>
 
             {/* Subtle Footer */}
-            <div className="px-4 py-1.5 bg-[#2d2d2d] border-t border-black/10 text-[10px] text-white/30 font-medium">
+            <div
+                className="px-4 py-1.5 text-[10px] font-medium"
+                style={{ background: "var(--bg-primary)", borderTop: "1px solid var(--border-color)", color: "var(--text-muted)" }}
+            >
                 {type.toUpperCase()} PREVIEW MODE
             </div>
         </div>

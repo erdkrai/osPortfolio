@@ -26,6 +26,16 @@
   --scrollbar-thumb: rgba(255, 255, 255, 0.2);
   --overlay-bg: rgba(0, 0, 0, 0.5);
 
+  /* App-level tokens */
+  --card-bg: rgba(255, 255, 255, 0.06);
+  --hover-bg: rgba(255, 255, 255, 0.04);
+  --sidebar-bg: rgba(0, 0, 0, 0.15);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --accent-subtle: rgba(233, 84, 32, 0.15);
+  --accent-muted: rgba(233, 84, 32, 0.08);
+  --text-heading: #ffffff;
+
   /* Constants */
   --panel-height-top: 32px;
   --dock-height: 60px;
@@ -58,6 +68,16 @@
   --scrollbar-track: rgba(0, 0, 0, 0.05);
   --scrollbar-thumb: rgba(0, 0, 0, 0.2);
   --overlay-bg: rgba(0, 0, 0, 0.3);
+
+  /* App-level tokens */
+  --card-bg: rgba(0, 0, 0, 0.04);
+  --hover-bg: rgba(0, 0, 0, 0.03);
+  --sidebar-bg: rgba(0, 0, 0, 0.04);
+  --input-bg: rgba(0, 0, 0, 0.04);
+  --input-border: rgba(0, 0, 0, 0.12);
+  --accent-subtle: rgba(233, 84, 32, 0.1);
+  --accent-muted: rgba(233, 84, 32, 0.05);
+  --text-heading: #1a1a1a;
 }
 
 html,

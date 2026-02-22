@@ -202,11 +202,10 @@ export function TerminalApp() {
         setOutput((prev) => [...prev, ...lines]);
     };
 
-    const OPEN_APP_MAP: Record<string, { appId: "about" | "projects" | "resume" | "contact"; title: string; defaultSize: { w: number; h: number } }> = {
+    const OPEN_APP_MAP: Record<string, { appId: "about" | "projects" | "resume"; title: string; defaultSize: { w: number; h: number } }> = {
         about: { appId: "about", title: "About Me", defaultSize: { w: 560, h: 500 } },
         projects: { appId: "projects", title: "Projects", defaultSize: { w: 900, h: 620 } },
         resume: { appId: "resume", title: "Resume", defaultSize: { w: 800, h: 640 } },
-        contact: { appId: "contact", title: "Contact", defaultSize: { w: 540, h: 580 } },
     };
 
     const processCommand = useCallback(
@@ -245,7 +244,7 @@ export function TerminalApp() {
                         { type: "output", text: "  projects        List all projects" },
                         { type: "output", text: "  skills          List tech skills" },
                         { type: "output", text: "  contact         Show contact info" },
-                        { type: "output", text: "  open <app>      Open GUI window: about, projects, resume, contact" },
+                        { type: "output", text: "  open <app>      Open GUI window: about, projects, resume" },
                         { type: "output", text: "" },
                         { type: "info", text: "── Filesystem ───────────────────────────────────" },
                         { type: "output", text: "  ls [-la]        List directory contents" },
@@ -330,7 +329,6 @@ export function TerminalApp() {
                             text: `  ${l.label.padEnd(8)}: ${l.href}`,
                         })),
                         { type: "output", text: "" },
-                        { type: "info", text: "Or run `open contact` to send a message via the GUI." },
                         { type: "output", text: "" },
                     ]);
                     break;

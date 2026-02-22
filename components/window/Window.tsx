@@ -426,10 +426,12 @@ export function Window({ window: win }: WindowProps) {
             >
                 <WindowControls window={win} />
                 <div className="flex-1 flex justify-center">
-                    <span className={clsx(
-                        "text-sm font-medium select-none pointer-events-none transition-colors",
-                        isActive ? "text-white/90" : "text-white/40"
-                    )}>
+                    <span
+                        className={clsx(
+                            "text-sm font-medium select-none pointer-events-none transition-colors"
+                        )}
+                        style={{ color: isActive ? "var(--text-primary)" : "var(--text-muted)" }}
+                    >
                         {win.title}
                     </span>
                 </div>

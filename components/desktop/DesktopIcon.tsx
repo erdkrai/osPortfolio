@@ -58,19 +58,6 @@ const getIconSvgs = (svgSizeClass: string): Record<string, React.ReactNode> => (
             </defs>
         </svg>
     ),
-    contact: (
-        /* Geary / GNOME Mail — envelope */
-        <svg viewBox="0 0 48 48" fill="none" className={`${svgSizeClass} drop-shadow-md`}>
-            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#ico-con)" />
-            <rect x="8" y="12" width="32" height="24" rx="4" fill="white" />
-            <path d="M8 14l16 11 16-11" stroke="url(#ico-con)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            <defs>
-                <linearGradient id="ico-con" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#3584e4" /><stop offset="1" stopColor="#1a5fb4" />
-                </linearGradient>
-            </defs>
-        </svg>
-    ),
     terminal: (
         /* GNOME Terminal — Ubuntu aubergine bg with prompt */
         <svg viewBox="0 0 48 48" fill="none" className={`${svgSizeClass} drop-shadow-md`}>
@@ -116,6 +103,24 @@ const getIconSvgs = (svgSizeClass: string): Record<string, React.ReactNode> => (
             <defs>
                 <linearGradient id="ico-photos" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
                     <stop stopColor="#26a269" /><stop offset="1" stopColor="#1a8553" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ),
+    games: (
+        /* GNOME Files / Nautilus folder — Ubuntu folder with gamepad overlay */
+        <svg viewBox="0 0 48 48" fill="none" className={`${svgSizeClass} drop-shadow-md`}>
+            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#ico-games)" />
+            {/* Folder shape */}
+            <path d="M8 14a2 2 0 012-2h8.5a2 2 0 011.6.8L22 15h16a2 2 0 012 2v17a2 2 0 01-2 2H10a2 2 0 01-2-2V14z" fill="white" fillOpacity="0.9" />
+            {/* Gamepad icon inside folder */}
+            <rect x="17" y="22" width="14" height="9" rx="3" fill="#5e5c64" />
+            <circle cx="21" cy="26" r="1.2" fill="white" />
+            <circle cx="27" cy="26" r="1.2" fill="white" />
+            <rect x="23" y="24.5" width="2" height="3" rx="1" fill="white" fillOpacity="0.5" />
+            <defs>
+                <linearGradient id="ico-games" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#613583" /><stop offset="1" stopColor="#462a63" />
                 </linearGradient>
             </defs>
         </svg>

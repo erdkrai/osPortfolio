@@ -79,12 +79,12 @@ function GnomeGroup({ title, children }: { title?: string; children: React.React
             {title && (
                 <h3
                     className="text-[11px] font-semibold uppercase tracking-wider mb-2 px-1"
-                    style={{ color: "rgba(255,255,255,0.4)" }}
+                    style={{ color: "var(--text-muted)" }}
                 >
                     {title}
                 </h3>
             )}
-            <div className="rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div className="rounded-xl overflow-hidden" style={{ background: "var(--card-bg)", border: "1px solid var(--border-color)" }}>
                 {children}
             </div>
         </div>
@@ -95,10 +95,10 @@ function GnomeRow({ label, value, href, last }: { label: string; value: string; 
     const content = (
         <div
             className="flex items-center justify-between px-4 py-3 text-sm"
-            style={!last ? { borderBottom: "1px solid rgba(255,255,255,0.06)" } : {}}
+            style={!last ? { borderBottom: "1px solid var(--border-color)" } : {}}
         >
-            <span style={{ color: "rgba(255,255,255,0.65)" }}>{label}</span>
-            <span className="text-right font-medium" style={{ color: href ? "#E95420" : "rgba(255,255,255,0.9)" }}>
+            <span style={{ color: "var(--text-secondary)" }}>{label}</span>
+            <span className="text-right font-medium" style={{ color: href ? "var(--accent-color)" : "var(--text-primary)" }}>
                 {value}
                 {href && (
                     <svg className="w-3 h-3 inline-block ml-1 opacity-50" fill="currentColor" viewBox="0 0 24 24">
@@ -111,7 +111,15 @@ function GnomeRow({ label, value, href, last }: { label: string; value: string; 
 
     if (href) {
         return (
-            <a href={href} target="_blank" rel="noopener noreferrer" className="block hover:bg-white/[0.04] transition-colors">
+            <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block transition-colors"
+                style={{ cursor: "pointer" }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--hover-bg)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+            >
                 {content}
             </a>
         );
@@ -127,15 +135,15 @@ function AboutSection() {
             <div className="flex flex-col items-center text-center mb-6 pt-2">
                 <div
                     className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-white mb-3 shadow-lg"
-                    style={{ background: "linear-gradient(135deg, #E95420, #77216F)" }}
+                    style={{ background: `linear-gradient(135deg, var(--accent-color), #77216F)` }}
                 >
                     {profile.name.charAt(0)}
                 </div>
-                <h2 className="text-lg font-bold text-white">{profile.name}</h2>
-                <p className="text-sm font-medium mt-0.5" style={{ color: "#E95420" }}>
+                <h2 className="text-lg font-bold" style={{ color: "var(--text-heading)" }}>{profile.name}</h2>
+                <p className="text-sm font-medium mt-0.5" style={{ color: "var(--accent-color)" }}>
                     {profile.title}
                 </p>
-                <div className="flex items-center gap-1 mt-1.5" style={{ color: "rgba(255,255,255,0.4)" }}>
+                <div className="flex items-center gap-1 mt-1.5" style={{ color: "var(--text-muted)" }}>
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                     </svg>
@@ -146,7 +154,7 @@ function AboutSection() {
             {/* Summary */}
             <GnomeGroup>
                 <div className="px-4 py-3">
-                    <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                         {profile.shortSummary}
                     </p>
                 </div>
@@ -160,12 +168,12 @@ function AboutSection() {
                             key={i}
                             className="px-4 py-3 text-center"
                             style={{
-                                borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.06)" : undefined,
-                                borderRight: i % 2 === 0 ? "1px solid rgba(255,255,255,0.06)" : undefined,
+                                borderBottom: i < 2 ? "1px solid var(--border-color)" : undefined,
+                                borderRight: i % 2 === 0 ? "1px solid var(--border-color)" : undefined,
                             }}
                         >
-                            <div className="text-lg font-bold" style={{ color: "#E95420" }}>{item.metric}</div>
-                            <div className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>{item.description}</div>
+                            <div className="text-lg font-bold" style={{ color: "var(--accent-color)" }}>{item.metric}</div>
+                            <div className="text-[11px] mt-0.5" style={{ color: "var(--text-muted)" }}>{item.description}</div>
                         </div>
                     ))}
                 </div>
@@ -186,13 +194,15 @@ function AboutSection() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/[0.04]"
-                        style={i < profile.links.length - 1 ? { borderBottom: "1px solid rgba(255,255,255,0.06)" } : {}}
+                        className="flex items-center gap-3 px-4 py-2.5 transition-colors"
+                        style={i < profile.links.length - 1 ? { borderBottom: "1px solid var(--border-color)" } : {}}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--hover-bg)"; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                     >
-                        <span style={{ color: "#E95420" }}>
+                        <span style={{ color: "var(--accent-color)" }}>
                             <SocialIcon icon={link.icon} />
                         </span>
-                        <span className="text-sm" style={{ color: "rgba(255,255,255,0.85)" }}>{link.label}</span>
+                        <span className="text-sm" style={{ color: "var(--text-primary)" }}>{link.label}</span>
                         <svg className="w-3 h-3 ml-auto opacity-30" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
                         </svg>
@@ -210,15 +220,15 @@ function ExperienceSection() {
                 <GnomeGroup key={i} title={exp.company}>
                     <div className="px-4 pt-3 pb-1">
                         <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm font-semibold text-white">{exp.role}</span>
+                            <span className="text-sm font-semibold" style={{ color: "var(--text-heading)" }}>{exp.role}</span>
                         </div>
-                        <span className="text-[11px] font-medium" style={{ color: "#E95420" }}>{exp.period}</span>
+                        <span className="text-[11px] font-medium" style={{ color: "var(--accent-color)" }}>{exp.period}</span>
                     </div>
                     <div className="px-4 pb-3 pt-2">
                         <ul className="space-y-2">
                             {exp.bullets.map((bullet, j) => (
-                                <li key={j} className="flex items-start gap-2 text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
-                                    <span className="shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full" style={{ background: "#E95420" }} />
+                                <li key={j} className="flex items-start gap-2 text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                                    <span className="shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-color)" }} />
                                     {bullet}
                                 </li>
                             ))}
@@ -252,11 +262,11 @@ function SkillsSection() {
                         key={i}
                         className="flex items-start gap-2.5 px-4 py-2.5 text-[13px]"
                         style={{
-                            color: "rgba(255,255,255,0.7)",
-                            borderBottom: i < profile.highlights.length - 1 ? "1px solid rgba(255,255,255,0.06)" : undefined,
+                            color: "var(--text-secondary)",
+                            borderBottom: i < profile.highlights.length - 1 ? "1px solid var(--border-color)" : undefined,
                         }}
                     >
-                        <span className="shrink-0 mt-0.5" style={{ color: "#E95420" }}>▸</span>
+                        <span className="shrink-0 mt-0.5" style={{ color: "var(--accent-color)" }}>▸</span>
                         {item}
                     </div>
                 ))}
@@ -274,16 +284,16 @@ function EducationSection() {
                         <div className="flex items-start gap-3">
                             <div
                                 className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                                style={{ background: "rgba(233,84,32,0.15)" }}
+                                style={{ background: "var(--accent-subtle)" }}
                             >
-                                <svg className="w-5 h-5" fill="#E95420" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5" style={{ fill: "var(--accent-color)" }} viewBox="0 0 24 24">
                                     <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
                                 </svg>
                             </div>
                             <div>
-                                <p className="text-sm font-semibold text-white">{edu.degree}</p>
-                                <p className="text-[13px] mt-0.5" style={{ color: "rgba(255,255,255,0.6)" }}>{edu.institution}</p>
-                                <p className="text-[11px] mt-1 font-medium" style={{ color: "#E95420" }}>{edu.period}</p>
+                                <p className="text-sm font-semibold" style={{ color: "var(--text-heading)" }}>{edu.degree}</p>
+                                <p className="text-[13px] mt-0.5" style={{ color: "var(--text-secondary)" }}>{edu.institution}</p>
+                                <p className="text-[11px] mt-1 font-medium" style={{ color: "var(--accent-color)" }}>{edu.period}</p>
                             </div>
                         </div>
                     </div>
@@ -294,12 +304,12 @@ function EducationSection() {
             <div className="mt-2 px-1">
                 <div
                     className="rounded-xl px-4 py-4 text-center"
-                    style={{ background: "rgba(233,84,32,0.08)", border: "1px solid rgba(233,84,32,0.15)" }}
+                    style={{ background: "var(--accent-muted)", border: "1px solid var(--accent-subtle)" }}
                 >
-                    <p className="text-[13px] italic leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                    <p className="text-[13px] italic leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                         &ldquo;We see our customers as invited guests to a party, and we are the hosts. It&rsquo;s our job every day to make every important aspect of the customer experience a little bit better.&rdquo;
                     </p>
-                    <p className="text-[11px] mt-2 font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    <p className="text-[11px] mt-2 font-medium" style={{ color: "var(--text-muted)" }}>
                         — Jeff Bezos
                     </p>
                 </div>
@@ -320,11 +330,11 @@ export function AboutApp() {
     const ActivePanel = SECTIONS[activeSection];
 
     return (
-        <div className="flex h-full" style={{ color: "#e0e0e0" }}>
+        <div className="flex h-full" style={{ color: "var(--text-primary)" }}>
             {/* Sidebar */}
             <div
                 className="w-48 shrink-0 flex flex-col py-3 px-2 gap-0.5 overflow-y-auto"
-                style={{ borderRight: "1px solid rgba(255,255,255,0.08)", background: "rgba(0,0,0,0.15)" }}
+                style={{ borderRight: "1px solid var(--border-color)", background: "var(--sidebar-bg)" }}
             >
                 {NAV_ITEMS.map((item) => {
                     const isActive = activeSection === item.id;
@@ -334,11 +344,11 @@ export function AboutApp() {
                             onClick={() => setActiveSection(item.id)}
                             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium text-left transition-colors w-full"
                             style={{
-                                background: isActive ? "rgba(233,84,32,0.18)" : "transparent",
-                                color: isActive ? "#E95420" : "rgba(255,255,255,0.6)",
+                                background: isActive ? "var(--accent-subtle)" : "transparent",
+                                color: isActive ? "var(--accent-color)" : "var(--text-secondary)",
                             }}
                         >
-                            <span style={{ color: isActive ? "#E95420" : "rgba(255,255,255,0.4)" }}>
+                            <span style={{ color: isActive ? "var(--accent-color)" : "var(--text-muted)" }}>
                                 {item.icon}
                             </span>
                             {item.label}
@@ -348,7 +358,7 @@ export function AboutApp() {
 
                 {/* System info at bottom */}
                 <div className="mt-auto pt-4 px-2">
-                    <div className="text-[10px] space-y-1" style={{ color: "rgba(255,255,255,0.25)" }}>
+                    <div className="text-[10px] space-y-1" style={{ color: "var(--text-muted)" }}>
                         <p>Ubuntu 24.04 LTS</p>
                         <p>GNOME 46</p>
                         <p>Portfolio v1.0.0</p>
