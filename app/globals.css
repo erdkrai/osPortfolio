@@ -1,26 +1,339 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Accent color - can be changed via settings */
+  --accent-color: #E95420;
+  --accent-color-hover: #c34113;
+
+  /* Dark theme (default) */
+  --bg-primary: #2D2D2D;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #1A1A1A;
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --text-muted: #666666;
+  --panel-bg: rgba(26, 5, 37, 0.92);
+  --dock-bg: rgba(30, 28, 36, 0.88);
+  --window-bg: #2d2d2d;
+  --window-body-bg: #1e1e1e;
+  --headerbar-bg-start: #3c3c3c;
+  --headerbar-bg-end: #343434;
+  --headerbar-border: rgba(0, 0, 0, 0.35);
+  --border-color: rgba(255, 255, 255, 0.06);
+  --shadow-color: rgba(0, 0, 0, 0.7);
+  --scrollbar-track: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+
+  /* Constants */
+  --panel-height-top: 32px;
+  --dock-height: 60px;
+
+  /* Legacy colors for backward compatibility */
+  --ubuntu-orange: var(--accent-color);
+  --ubuntu-orange-hover: var(--accent-color-hover);
+  --ubuntu-aubergine: #77216F;
+  --ubuntu-dark: var(--bg-primary);
+  --ubuntu-darker: var(--bg-tertiary);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Light theme */
+[data-theme="light"] {
+  --bg-primary: #f6f6f6;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+  --panel-bg: rgba(246, 246, 246, 0.95);
+  --dock-bg: rgba(255, 255, 255, 0.9);
+  --window-bg: #f6f6f6;
+  --window-body-bg: #ffffff;
+  --headerbar-bg-start: #e8e8e8;
+  --headerbar-bg-end: #dcdcdc;
+  --headerbar-border: rgba(0, 0, 0, 0.1);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --shadow-color: rgba(0, 0, 0, 0.15);
+  --scrollbar-track: rgba(0, 0, 0, 0.05);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --overlay-bg: rgba(0, 0, 0, 0.3);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Ubuntu', system-ui, sans-serif;
+}
+
+/* Ubuntu Yaru-style wallpaper - Dark theme */
+.wallpaper {
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(119, 33, 111, 0.5) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 25%, rgba(233, 84, 32, 0.18) 0%, transparent 40%),
+    radial-gradient(ellipse at 55% 90%, rgba(48, 10, 60, 0.6) 0%, transparent 50%),
+    linear-gradient(150deg, #1a0525 0%, #2b0d38 25%, #1c1028 55%, #0e0a14 100%);
+  animation: wallpaper-breathe 16s ease-in-out infinite alternate;
+}
+
+/* Light theme wallpaper */
+[data-theme="light"] .wallpaper {
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(119, 33, 111, 0.15) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 25%, rgba(233, 84, 32, 0.1) 0%, transparent 40%),
+    radial-gradient(ellipse at 55% 90%, rgba(48, 10, 60, 0.08) 0%, transparent 50%),
+    linear-gradient(150deg, #e8e0f0 0%, #f0e8f8 25%, #e8e8f0 55%, #f0f0f8 100%);
+}
+
+@keyframes wallpaper-breathe {
+  0% {
+    filter: brightness(1.00) saturate(1.0);
+  }
+
+  50% {
+    filter: brightness(1.06) saturate(1.1);
+  }
+
+  100% {
+    filter: brightness(0.97) saturate(0.95);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Subtle grid overlay like Ubuntu wallpaper */
+.wallpaper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+[data-theme="light"] .wallpaper::after {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+/* Ubuntu top panel */
+.ubuntu-panel {
+  height: var(--panel-height-top);
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px) saturate(200%);
+  -webkit-backdrop-filter: blur(16px) saturate(200%);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Ubuntu bottom dock */
+.ubuntu-dock {
+  background: var(--dock-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+}
+
+/* Ubuntu window */
+.ubuntu-window {
+  background: var(--window-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 32px 80px var(--shadow-color),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.ubuntu-window-active {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 40px 100px var(--shadow-color),
+    0 0 0 1px color-mix(in srgb, var(--accent-color) 25%, transparent);
+}
+
+/* Header bar (libadwaita / Yaru style) */
+.ubuntu-headerbar {
+  height: 44px;
+  background: linear-gradient(180deg, var(--headerbar-bg-start) 0%, var(--headerbar-bg-end) 100%);
+  border-bottom: 1px solid var(--headerbar-border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  flex-shrink: 0;
+  cursor: grab;
+  user-select: none;
+}
+
+.ubuntu-headerbar:active {
+  cursor: grabbing;
+}
+
+.ubuntu-headerbar-inactive {
+  background: linear-gradient(180deg, var(--bg-tertiary) 0%, color-mix(in srgb, var(--bg-tertiary) 90%, black) 100%);
+}
+
+/* Window body */
+.ubuntu-window-body {
+  background: var(--window-body-bg);
+  flex: 1;
+  overflow: auto;
+  color: var(--text-primary);
+}
+
+/* Window control buttons - Ubuntu Yaru style */
+.wm-btn {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.wm-btn:hover {
+  filter: brightness(1.15);
+}
+
+.wm-btn:active {
+  transform: scale(0.92);
+}
+
+.wm-btn-close {
+  background: #f05060;
+  box-shadow: 0 1px 3px rgba(240, 80, 96, 0.4);
+}
+
+.wm-btn-min {
+  background: #f4bb40;
+  box-shadow: 0 1px 3px rgba(244, 187, 64, 0.4);
+}
+
+.wm-btn-max {
+  background: #56c355;
+  box-shadow: 0 1px 3px rgba(86, 195, 85, 0.4);
+}
+
+.wm-btn-inactive {
+  background: #555555;
+  box-shadow: none;
+}
+
+/* Ubuntu orange accent */
+.ubuntu-orange {
+  color: var(--accent-color);
+}
+
+.bg-ubuntu-orange {
+  background-color: var(--accent-color);
+}
+
+.border-ubuntu-orange {
+  border-color: var(--accent-color);
+}
+
+/* Custom scrollbar - Ubuntu style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent-color) 50%, transparent);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent-color) 80%, transparent);
+  outline-offset: 2px;
+}
+
+/* Window resize handles */
+.ubuntu-window > div[class*="cursor-"] {
+  transition: background-color 0.15s ease;
+}
+
+.ubuntu-window > div[class*="cursor-"]:hover {
+  background-color: var(--accent-color);
+  opacity: 0.5;
+}
+
+/* Corner resize handles */
+.cursor-nw-resize,
+.cursor-ne-resize,
+.cursor-sw-resize,
+.cursor-se-resize {
+  border-radius: 2px;
+}
+
+/* Edge resize handles */
+.cursor-n-resize,
+.cursor-s-resize {
+  border-radius: 2px;
+}
+
+.cursor-w-resize,
+.cursor-e-resize {
+  border-radius: 2px;
+}
+
+/* ============================================
+   Boot Screen
+   ============================================ */
+
+.boot-screen {
+  background: radial-gradient(
+      ellipse at 50% 45%,
+      rgba(119, 33, 111, 0.35) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 55% 55%,
+      rgba(77, 17, 80, 0.2) 0%,
+      transparent 50%
+    ),
+    linear-gradient(180deg, #1a0a20 0%, #2c0b33 30%, #200e28 65%, #0d060f 100%);
+}
+
+/* Ubuntu-style pulsing dots */
+.boot-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  animation: boot-dot-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes boot-dot-pulse {
+  0%,
+  100% {
+    background: rgba(255, 255, 255, 0.18);
+    transform: scale(1);
+  }
+  40% {
+    background: rgba(255, 255, 255, 0.85);
+    transform: scale(1.15);
+  }
 }
