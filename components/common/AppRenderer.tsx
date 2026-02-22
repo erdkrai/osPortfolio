@@ -10,6 +10,7 @@ import { SnakeApp } from "@/components/apps/SnakeApp";
 import { TetrisApp } from "@/components/apps/TetrisApp";
 import { MinesweeperApp } from "@/components/apps/MinesweeperApp";
 import { MusicApp } from "@/components/apps/MusicApp";
+import { KeyboardShortcutsApp } from "@/components/apps/KeyboardShortcutsApp";
 
 interface AppRendererProps {
     appId: AppId;
@@ -43,6 +44,8 @@ export function AppRenderer({ appId, windowId }: AppRendererProps) {
             return <MinesweeperApp />;
         case "music":
             return <MusicApp />;
+        case "shortcuts":
+            return <KeyboardShortcutsApp />;
         default:
             return (
                 <div className="flex items-center justify-center h-full text-white/40">

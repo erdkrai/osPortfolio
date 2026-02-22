@@ -357,3 +357,553 @@ body {
     transform: scale(1.15);
   }
 }
+
+/* ── System tray volume slider (Ubuntu-style) ──────────────────────────── */
+.system-tray-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(
+    to right,
+    var(--accent, var(--accent-color)) 0%,
+    var(--accent, var(--accent-color)) var(--slider-progress, 50%),
+    var(--card-bg) var(--slider-progress, 50%),
+    var(--card-bg) 100%
+  );
+}
+.system-tray-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--accent, var(--accent-color));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.system-tray-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.system-tray-slider::-webkit-slider-thumb:active {
+  transform: scale(1.25);
+}
+.system-tray-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--accent, var(--accent-color));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.system-tray-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--card-bg);
+}
+.system-tray-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent, var(--accent-color));
+}
+
+/* ═══════════════════════════════════════════════════
+   Keyboard Shortcuts App — keycap styling
+   ═══════════════════════════════════════════════════ */
+
+.sc-keycap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+[data-theme="dark"] .sc-keycap {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ═══════════════════════════════════════════════════
+   GNOME Activities View — accurate Ubuntu 22+ style
+   ═══════════════════════════════════════════════════ */
+
+/* Root container — covers the entire viewport */
+.act-root {
+  position: fixed;
+  inset: 0;
+  z-index: 10000; /* above everything: dock (9999), topbar (9998) */
+  overflow: hidden;
+}
+
+/* Wallpaper layer sits behind the scrim — same image as desktop, heavily blurred */
+.act-wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  filter: blur(32px) brightness(0.55) saturate(1.2);
+  transform: scale(1.1); /* prevent white edges from blur */
+}
+[data-theme="light"] .act-wallpaper {
+  filter: blur(32px) brightness(0.9) saturate(1.1);
+}
+
+/* Dark scrim on top of wallpaper */
+.act-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+[data-theme="light"] .act-scrim {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Content grid: search on top, main area fills middle, bottom bar, workspace strip right */
+.act-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 40px; /* below top-panel (32px) + small gap */
+}
+
+/* ── Search ── */
+.act-search-wrap {
+  width: 100%;
+  max-width: 520px;
+  padding: 0 24px;
+  margin-bottom: 20px;
+}
+
+.act-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.act-search:focus-within {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(233, 84, 32, 0.18), 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+[data-theme="light"] .act-search {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .act-search:focus-within {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(233, 84, 32, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.act-search-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.55);
+}
+[data-theme="light"] .act-search-icon {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.act-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 400;
+}
+.act-search-input::placeholder { color: rgba(255, 255, 255, 0.45); }
+[data-theme="light"] .act-search-input { color: #1a1a1a; }
+[data-theme="light"] .act-search-input::placeholder { color: rgba(0, 0, 0, 0.4); }
+
+.act-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.act-search-clear:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+[data-theme="light"] .act-search-clear { color: rgba(0, 0, 0, 0.4); }
+[data-theme="light"] .act-search-clear:hover { background: rgba(0, 0, 0, 0.08); color: #1a1a1a; }
+
+/* ── Main area ── */
+.act-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0 100px 0 20px; /* right padding for workspace strip */
+}
+
+/* ── App Grid ── */
+.act-appgrid-wrap {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 20px 10px;
+}
+
+.act-appgrid {
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  gap: 28px 36px;
+  justify-content: center;
+}
+@media (min-width: 900px) {
+  .act-appgrid { grid-template-columns: repeat(6, 100px); }
+}
+@media (max-width: 640px) {
+  .act-appgrid { grid-template-columns: repeat(3, 80px); gap: 16px 20px; }
+}
+
+.act-app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 8px 10px;
+  border-radius: 18px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.12s ease;
+}
+.act-app-item:hover { background: rgba(255, 255, 255, 0.1); }
+.act-app-item:active { transform: scale(0.9); }
+[data-theme="light"] .act-app-item:hover { background: rgba(0, 0, 0, 0.07); }
+
+.act-app-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  overflow: hidden;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.35));
+  transition: transform 0.15s ease;
+}
+.act-app-item:hover .act-app-icon-wrap { transform: scale(1.08); }
+[data-theme="light"] .act-app-icon-wrap { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15)); }
+
+.act-app-name {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+[data-theme="light"] .act-app-name {
+  color: #1a1a1a;
+  text-shadow: none;
+}
+
+.act-app-dot {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.act-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+}
+[data-theme="light"] .act-no-results { color: rgba(0, 0, 0, 0.35); }
+
+/* ── Window Overview ── */
+.act-windows-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.act-win-card {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: visible;
+  transition: box-shadow 0.2s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+}
+.act-win-card:hover {
+  transform: scale(1.04);
+  z-index: 5;
+}
+.act-win-card:hover .act-win-mock {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 2px var(--accent-color);
+}
+.act-win-active .act-win-mock {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 0 2px var(--accent-color);
+}
+
+/* Minimized windows — slightly dimmed */
+.act-win-minimized { opacity: 0.65; }
+.act-win-minimized:hover { opacity: 1; }
+
+/* Close button */
+.act-win-close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 10;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(40, 40, 40, 0.85);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s, transform 0.15s;
+  transform: scale(0.7);
+  backdrop-filter: blur(4px);
+}
+.act-win-card:hover .act-win-close { opacity: 1; transform: scale(1); }
+.act-win-close:hover { background: #e01b24; border-color: #e01b24; }
+
+/* Mock window */
+.act-win-mock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--window-body-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.2s;
+}
+
+/* Header bar */
+.act-win-hbar {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  min-height: 22px;
+  background: linear-gradient(180deg, var(--headerbar-bg-start), var(--headerbar-bg-end));
+  border-bottom: 1px solid var(--headerbar-border);
+}
+.act-win-dots {
+  display: flex;
+  gap: 4px;
+}
+.act-win-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.act-win-dots span:nth-child(1) { background: #e95420; opacity: 0.7; }
+.act-win-dots span:nth-child(2) { background: #e5a50a; opacity: 0.7; }
+.act-win-dots span:nth-child(3) { background: #26a269; opacity: 0.7; }
+.act-win-hbar-title {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Live app preview container */
+.act-win-live-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--window-body-bg);
+}
+
+.act-win-live-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  transform: scale(var(--preview-scale, 0.35));
+  overflow: hidden;
+  pointer-events: none; /* Prevent interaction with the preview */
+  user-select: none;
+}
+
+/* Label below window */
+.act-win-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 0 2px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+.act-win-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+.act-win-label-icon { width: 14px; height: 14px; flex-shrink: 0; }
+[data-theme="light"] .act-win-label { color: #1a1a1a; text-shadow: none; }
+
+/* ── Empty state ── */
+.act-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.act-empty-text { font-size: 18px; font-weight: 500; color: rgba(255, 255, 255, 0.6); }
+.act-empty-sub { font-size: 13px; color: rgba(255, 255, 255, 0.35); }
+[data-theme="light"] .act-empty-text { color: rgba(0, 0, 0, 0.5); }
+[data-theme="light"] .act-empty-sub { color: rgba(0, 0, 0, 0.3); }
+
+/* ── Bottom bar: Show Apps toggle ── */
+.act-bottom {
+  position: relative;
+  z-index: 3;
+  padding: 10px 0 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.act-show-apps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.act-show-apps:hover { background: rgba(255, 255, 255, 0.18); color: #fff; transform: scale(1.08); }
+.act-show-apps:active { transform: scale(0.94); }
+.act-show-apps-active {
+  background: rgba(255, 255, 255, 0.22) !important;
+  color: #fff !important;
+}
+[data-theme="light"] .act-show-apps {
+  background: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.6);
+}
+[data-theme="light"] .act-show-apps:hover { background: rgba(0, 0, 0, 0.14); color: #1a1a1a; }
+[data-theme="light"] .act-show-apps-active {
+  background: rgba(0, 0, 0, 0.16) !important;
+  color: #1a1a1a !important;
+}
+
+/* ── Workspace strip (right edge) ── */
+.act-ws-strip {
+  position: fixed;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.act-ws-thumb {
+  position: relative;
+  width: 72px;
+  height: 44px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.act-ws-thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.2s;
+}
+.act-ws-current::after {
+  border-color: var(--accent-color);
+}
+.act-ws-empty {
+  opacity: 0.5;
+}
+.act-ws-empty::after {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+[data-theme="light"] .act-ws-empty::after {
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.act-ws-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+}
+[data-theme="light"] .act-ws-scrim { background: rgba(255, 255, 255, 0.15); }
+
+.act-ws-mini-win {
+  position: absolute;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 0.5px solid rgba(255, 255, 255, 0.2);
+}
+[data-theme="light"] .act-ws-mini-win {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(0, 0, 0, 0.15);
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useWindowStore } from "@/store/windows";
-import { AppConfig } from "./Desktop";
+import { AppConfig } from "@/data/apps";
 import { Clock } from "./Clock";
 import { clsx } from "clsx";
 

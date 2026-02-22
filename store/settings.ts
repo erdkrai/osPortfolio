@@ -46,6 +46,7 @@ interface SettingsState {
 
     // System
     soundEffects: boolean;
+    volume: number;
     notifications: boolean;
     locked: boolean;
 
@@ -64,6 +65,7 @@ interface SettingsState {
     setWindowAnimations: (enabled: boolean) => void;
     setSnapEnabled: (enabled: boolean) => void;
     setSoundEffects: (enabled: boolean) => void;
+    setVolume: (volume: number) => void;
     setNotifications: (enabled: boolean) => void;
     resetSettings: () => void;
 }
@@ -169,6 +171,7 @@ export const useSettingsStore = create<SettingsState>((set) => ({
 
     // System
     soundEffects: true,
+    volume: 75,
     notifications: true,
     locked: false,
 
@@ -187,6 +190,7 @@ export const useSettingsStore = create<SettingsState>((set) => ({
     setWindowAnimations: (enabled) => set({ windowAnimations: enabled }),
     setSnapEnabled: (enabled) => set({ snapEnabled: enabled }),
     setSoundEffects: (enabled) => set({ soundEffects: enabled }),
+    setVolume: (volume) => set({ volume: Math.max(0, Math.min(100, volume)) }),
     setNotifications: (enabled) => set({ notifications: enabled }),
 
     resetSettings: () => set({
@@ -202,6 +206,7 @@ export const useSettingsStore = create<SettingsState>((set) => ({
         windowAnimations: true,
         snapEnabled: true,
         soundEffects: true,
+        volume: 75,
         notifications: true,
     }),
 }));

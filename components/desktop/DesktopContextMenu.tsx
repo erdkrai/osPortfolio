@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWindowStore } from "@/store/windows";
 import { useSettingsStore, type DesktopSort, type IconSize } from "@/store/settings";
-import { APPS } from "./Desktop";
+import { APPS } from "@/data/apps";
 
 interface ContextMenuState {
     x: number;

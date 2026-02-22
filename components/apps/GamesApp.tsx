@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useWindowStore, AppId } from "@/store/windows";
-import { APPS } from "@/components/desktop/Desktop";
+import { APPS } from "@/data/apps";
 
 /* ── Types ─────────────────────────────────────────────────────────────── */
 type FolderPath = "home" | "games";
@@ -217,8 +217,8 @@ const SIDEBAR_PLACES: { id: FolderPath; label: string; icon: React.ReactNode }[]
    ══════════════════════════════════════════════════════════════════════════ */
 export function GamesApp() {
     const { openWindow } = useWindowStore();
-    const [currentPath, setCurrentPath] = useState<FolderPath>("home");
-    const [history, setHistory] = useState<FolderPath[]>(["home"]);
+    const [currentPath, setCurrentPath] = useState<FolderPath>("games");
+    const [history, setHistory] = useState<FolderPath[]>(["games"]);
     const [historyIdx, setHistoryIdx] = useState(0);
 
     const items = FOLDER_CONTENTS[currentPath];

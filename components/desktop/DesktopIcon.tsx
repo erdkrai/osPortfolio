@@ -3,7 +3,7 @@
 import React from "react";
 import { useWindowStore } from "@/store/windows";
 import { useSettingsStore, IconSize } from "@/store/settings";
-import { AppConfig } from "./Desktop";
+import { AppConfig } from "@/data/apps";
 import { clsx } from "clsx";
 
 interface DesktopIconProps {
@@ -194,6 +194,27 @@ const getIconSvgs = (svgSizeClass: string): Record<string, React.ReactNode> => (
             <defs>
                 <linearGradient id="ico-music" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
                     <stop stopColor="#e66100" /><stop offset="1" stopColor="#c64600" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ),
+    shortcuts: (
+        /* GNOME Keyboard Shortcuts — keyboard on teal */
+        <svg viewBox="0 0 48 48" fill="none" className={`${svgSizeClass} drop-shadow-md`}>
+            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#ico-shortcuts)" />
+            <rect x="8" y="14" width="32" height="20" rx="3" fill="white" fillOpacity="0.9" />
+            <rect x="12" y="18" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="19" y="18" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="26" y="18" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="33" y="18" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="12" y="24" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="19" y="24" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="26" y="24" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="33" y="24" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="15" y="30" width="18" height="3" rx="1" fill="#5e5c64" />
+            <defs>
+                <linearGradient id="ico-shortcuts" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#1a8a7a" /><stop offset="1" stopColor="#136b5e" />
                 </linearGradient>
             </defs>
         </svg>

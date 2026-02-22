@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { playSound } from "@/lib/sound";
 import { useSettingsStore } from "./settings";
 
-export type AppId = "about" | "projects" | "resume" | "terminal" | "preview" | "settings" | "photos" | "games" | "snake" | "tetris" | "minesweeper" | "music";
+export type AppId = "about" | "projects" | "resume" | "terminal" | "preview" | "settings" | "photos" | "games" | "snake" | "tetris" | "minesweeper" | "music" | "shortcuts";
 
 export type SnapZone =
   | "left"

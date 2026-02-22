@@ -1,6 +1,15 @@
 // Simple audio utility for system sounds
+import { useSettingsStore } from "@/store/settings";
+
 let audioContext: AudioContext | null = null;
 let audioReady = false;
+
+/** Read volume (0-100) and soundEffects toggle from the Zustand store */
+function getVolumeMultiplier(): number {
+    const { soundEffects, volume } = useSettingsStore.getState();
+    if (!soundEffects) return 0;
+    return volume / 100;
+}
 
 function getContext(): AudioContext {
     if (!audioContext) {
@@ -48,6 +57,9 @@ export function initAudioContext(): void {
 export function playSound(type: "open" | "close" | "click" | "notification"): void {
     if (typeof window === "undefined") return;
 
+    const vol = getVolumeMultiplier();
+    if (vol === 0) return;
+
     const ctx = getContext();
 
     const oscillator = ctx.createOscillator();
@@ -61,31 +73,31 @@ export function playSound(type: "open" | "close" | "click" | "notification"): vo
         case "open":
             oscillator.frequency.setValueAtTime(440, ctx.currentTime);
             oscillator.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1);
-            gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+            gainNode.gain.setValueAtTime(0.1 * vol, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01 * vol, ctx.currentTime + 0.15);
             oscillator.start(ctx.currentTime);
             oscillator.stop(ctx.currentTime + 0.15);
             break;
         case "close":
             oscillator.frequency.setValueAtTime(880, ctx.currentTime);
             oscillator.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.1);
-            gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+            gainNode.gain.setValueAtTime(0.1 * vol, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01 * vol, ctx.currentTime + 0.15);
             oscillator.start(ctx.currentTime);
             oscillator.stop(ctx.currentTime + 0.15);
             break;
         case "click":
             oscillator.frequency.setValueAtTime(600, ctx.currentTime);
-            gainNode.gain.setValueAtTime(0.05, ctx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+            gainNode.gain.setValueAtTime(0.05 * vol, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01 * vol, ctx.currentTime + 0.05);
             oscillator.start(ctx.currentTime);
             oscillator.stop(ctx.currentTime + 0.05);
             break;
         case "notification":
             oscillator.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
             oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
-            gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.1 * vol, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01 * vol, ctx.currentTime + 0.3);
             oscillator.start(ctx.currentTime);
             oscillator.stop(ctx.currentTime + 0.3);
             break;
@@ -101,15 +113,19 @@ function playTone(
     volume: number,
     type: OscillatorType = "sine"
 ) {
+    const mul = getVolumeMultiplier();
+    const adjVol = volume * mul;
+    if (adjVol <= 0) return;
+
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;
     osc.frequency.setValueAtTime(freq, startTime);
     gain.gain.setValueAtTime(0, startTime);
     // Soft attack
-    gain.gain.linearRampToValueAtTime(volume, startTime + 0.04);
+    gain.gain.linearRampToValueAtTime(adjVol, startTime + 0.04);
     // Sustain then release
-    gain.gain.setValueAtTime(volume, startTime + duration * 0.6);
+    gain.gain.setValueAtTime(adjVol, startTime + duration * 0.6);
     gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
     osc.connect(gain);
     gain.connect(ctx.destination);

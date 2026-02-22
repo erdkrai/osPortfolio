@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useWindowStore } from "@/store/windows";
 import { useSettingsStore } from "@/store/settings";
 import { clsx } from "clsx";
@@ -8,6 +8,9 @@ import { AnalogClockDropdown } from "./AnalogClockDropdown";
 import { CalendarDropdown } from "./CalendarDropdown";
 import { profile } from "@/data/profile";
 import { playLockSound } from "@/lib/sound";
+import { VolumeTrayDropdown, BatteryTrayDropdown, NetworkTrayDropdown } from "./SystemTrayDropdown";
+import { ActivitiesView } from "./ActivitiesView";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 export function TopBar() {
     const [time, setTime] = useState("");
@@ -16,8 +19,25 @@ export function TopBar() {
     const [showWallpaperMenu, setShowWallpaperMenu] = useState(false);
     const [showClock, setShowClock] = useState(false);
     const [showCalendar, setShowCalendar] = useState(false);
+    const [showVolumeTray, setShowVolumeTray] = useState(false);
+    const [showBatteryTray, setShowBatteryTray] = useState(false);
+    const [showNetworkTray, setShowNetworkTray] = useState(false);
+    const [showActivities, setShowActivities] = useState(false);
     const { windows, activeWindowId, openWindow } = useWindowStore();
     const { wallpaper, setWallpaper, wallpapers, accentColor, lockScreen, theme } = useSettingsStore();
+
+    // Global keyboard shortcuts
+    const handleActivities = useCallback(() => setShowActivities((prev) => !prev), []);
+    const handleShowApps = useCallback(() => {
+        setShowActivities(true);
+        // The Activities view will be opened with "show apps" triggered
+        // We set a tiny timeout so Activities opens first, then showApps is activated
+        setTimeout(() => {
+            // Dispatch a custom event that ActivitiesView listens for
+            window.dispatchEvent(new CustomEvent("activities-show-apps"));
+        }, 50);
+    }, []);
+    useKeyboardShortcuts({ onActivities: handleActivities, onShowApps: handleShowApps });
 
     useEffect(() => {
         const update = () => {
@@ -28,6 +48,24 @@ export function TopBar() {
         update();
         const id = setInterval(update, 10_000);
         return () => clearInterval(id);
+    }, []);
+
+
+
+    // Hot corner — top-left triggers Activities
+    useEffect(() => {
+        let timeout: ReturnType<typeof setTimeout>;
+        const handler = (e: MouseEvent) => {
+            if (e.clientX <= 1 && e.clientY <= 1) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => setShowActivities(true), 100);
+            }
+        };
+        window.addEventListener("mousemove", handler);
+        return () => {
+            window.removeEventListener("mousemove", handler);
+            clearTimeout(timeout);
+        };
     }, []);
 
     const activeWin = windows.find((w) => w.windowId === activeWindowId && !w.minimized);
@@ -54,9 +92,22 @@ export function TopBar() {
             {/* Left: Activities + focused app name */}
             <div className="flex items-center gap-4">
                 <button
-                    className="flex items-center gap-1.5 px-2 py-0.5 rounded text-[var(--text-primary)] text-sm font-medium
-            hover:bg-[var(--border-color)] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-color)]"
+                    onClick={() => {
+                        setShowActivities(!showActivities);
+                        setShowMenu(false);
+                        setShowClock(false);
+                        setShowCalendar(false);
+                        setShowVolumeTray(false);
+                        setShowBatteryTray(false);
+                        setShowNetworkTray(false);
+                    }}
+                    className={clsx(
+                        "flex items-center gap-1.5 px-2 py-0.5 rounded text-[var(--text-primary)] text-sm font-medium",
+                        "transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-color)]",
+                        showActivities ? "bg-[var(--border-color)]" : "hover:bg-[var(--border-color)]"
+                    )}
                     aria-label="Activities overview"
+                    aria-expanded={showActivities}
                 >
                     {/* Ubuntu logo */}
                     <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none">
@@ -70,6 +121,33 @@ export function TopBar() {
                         <line x1="17.5" y1="16" x2="15" y2="14.5" stroke="white" strokeWidth="1.5" />
                     </svg>
                     Activities
+                </button>
+
+                {/* Show Applications button */}
+                <button
+                    onClick={() => {
+                        handleShowApps();
+                        setShowMenu(false);
+                        setShowClock(false);
+                        setShowCalendar(false);
+                        setShowVolumeTray(false);
+                        setShowBatteryTray(false);
+                        setShowNetworkTray(false);
+                    }}
+                    className={clsx(
+                        "flex items-center gap-1.5 px-2 py-0.5 rounded text-[var(--text-primary)] text-sm font-medium",
+                        "transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-color)]",
+                        "hover:bg-[var(--border-color)]"
+                    )}
+                    aria-label="Show all applications"
+                >
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="currentColor">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
+                    Applications
                 </button>
 
                 {/* Focused window app name */}
@@ -88,6 +166,9 @@ export function TopBar() {
                             setShowCalendar(!showCalendar);
                             setShowClock(false);
                             setShowMenu(false);
+                            setShowVolumeTray(false);
+                            setShowBatteryTray(false);
+                            setShowNetworkTray(false);
                         }}
                         className={clsx(
                             "flex items-center px-2 py-0.5 rounded-l text-sm transition-colors focus:outline-none",
@@ -105,6 +186,9 @@ export function TopBar() {
                             setShowClock(!showClock);
                             setShowCalendar(false);
                             setShowMenu(false);
+                            setShowVolumeTray(false);
+                            setShowBatteryTray(false);
+                            setShowNetworkTray(false);
                         }}
                         className={clsx(
                             "flex items-center px-2 py-0.5 rounded-r text-sm transition-colors focus:outline-none",
@@ -120,38 +204,80 @@ export function TopBar() {
 
             {/* Right: System tray */}
             <div className="flex items-center gap-1">
-                {/* Network */}
-                <button
-                    className="p-1 rounded hover:bg-[var(--border-color)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none"
-                    aria-label="Network settings"
-                    title="Network"
-                >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
-                    </svg>
-                </button>
+                {/* Network — separate tray */}
+                <div className="relative">
+                    <button
+                        onClick={() => {
+                            setShowNetworkTray(!showNetworkTray);
+                            setShowVolumeTray(false);
+                            setShowBatteryTray(false);
+                            setShowMenu(false);
+                            setShowClock(false);
+                            setShowCalendar(false);
+                        }}
+                        className={clsx(
+                            "p-1 rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none",
+                            showNetworkTray ? "bg-[var(--border-color)]" : "hover:bg-[var(--border-color)]"
+                        )}
+                        aria-label="Network settings"
+                        title="Network"
+                    >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                        </svg>
+                    </button>
+                    <NetworkTrayDropdown open={showNetworkTray} onClose={() => setShowNetworkTray(false)} />
+                </div>
 
-                {/* Volume */}
-                <button
-                    className="p-1 rounded hover:bg-[var(--border-color)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none"
-                    aria-label="Volume settings"
-                    title="Volume"
-                >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
-                    </svg>
-                </button>
+                {/* Volume — separate tray */}
+                <div className="relative">
+                    <button
+                        onClick={() => {
+                            setShowVolumeTray(!showVolumeTray);
+                            setShowBatteryTray(false);
+                            setShowNetworkTray(false);
+                            setShowMenu(false);
+                            setShowClock(false);
+                            setShowCalendar(false);
+                        }}
+                        className={clsx(
+                            "p-1 rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none",
+                            showVolumeTray ? "bg-[var(--border-color)]" : "hover:bg-[var(--border-color)]"
+                        )}
+                        aria-label="Volume settings"
+                        title="Volume"
+                    >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" />
+                        </svg>
+                    </button>
+                    <VolumeTrayDropdown open={showVolumeTray} onClose={() => setShowVolumeTray(false)} />
+                </div>
 
-                {/* Battery */}
-                <button
-                    className="p-1 rounded hover:bg-[var(--border-color)] transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none"
-                    aria-label="Battery status"
-                    title="Battery"
-                >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z" />
-                    </svg>
-                </button>
+                {/* Battery — separate tray */}
+                <div className="relative">
+                    <button
+                        onClick={() => {
+                            setShowBatteryTray(!showBatteryTray);
+                            setShowVolumeTray(false);
+                            setShowNetworkTray(false);
+                            setShowMenu(false);
+                            setShowClock(false);
+                            setShowCalendar(false);
+                        }}
+                        className={clsx(
+                            "p-1 rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none",
+                            showBatteryTray ? "bg-[var(--border-color)]" : "hover:bg-[var(--border-color)]"
+                        )}
+                        aria-label="Battery status"
+                        title="Battery"
+                    >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z" />
+                        </svg>
+                    </button>
+                    <BatteryTrayDropdown open={showBatteryTray} onClose={() => setShowBatteryTray(false)} />
+                </div>
 
                 {/* System menu */}
                 <button
@@ -159,6 +285,9 @@ export function TopBar() {
                         setShowMenu(!showMenu);
                         setShowClock(false);
                         setShowCalendar(false);
+                        setShowVolumeTray(false);
+                        setShowBatteryTray(false);
+                        setShowNetworkTray(false);
                     }}
                     className={clsx(
                         "flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-medium focus:outline-none",
@@ -290,6 +419,9 @@ export function TopBar() {
                     </>
                 )}
             </div>
+
+            {/* Activities overlay */}
+            <ActivitiesView open={showActivities} onClose={() => setShowActivities(false)} />
         </div>
     );
 }

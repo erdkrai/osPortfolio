@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { useWindowStore, AppId } from "@/store/windows";
+import { useWindowStore } from "@/store/windows";
 import { useSettingsStore } from "@/store/settings";
+import { APPS } from "@/data/apps";
 import { DesktopIcon } from "./DesktopIcon";
 import { TopBar } from "./TopBar";
 import { Dock } from "./Dock";
@@ -12,24 +13,6 @@ import { DesktopWidgets } from "./DesktopWidgets";
 import { NotificationCenter } from "./NotificationCenter";
 import { DesktopContextMenu } from "./DesktopContextMenu";
 import { AnimatePresence } from "framer-motion";
-
-export type AppConfig = {
-    appId: AppId;
-    title: string;
-    icon: string;
-    defaultSize: { w: number; h: number };
-};
-
-export const APPS: AppConfig[] = [
-    { appId: "about", title: "About Me", icon: "about", defaultSize: { w: 560, h: 500 } },
-    { appId: "projects", title: "Projects", icon: "projects", defaultSize: { w: 900, h: 620 } },
-    { appId: "resume", title: "Resume", icon: "resume", defaultSize: { w: 800, h: 640 } },
-    { appId: "terminal", title: "Terminal", icon: "terminal", defaultSize: { w: 720, h: 480 } },
-    { appId: "settings", title: "Settings", icon: "settings", defaultSize: { w: 900, h: 600 } },
-    { appId: "photos", title: "Photos", icon: "photos", defaultSize: { w: 900, h: 640 } },
-    { appId: "games", title: "Files", icon: "games", defaultSize: { w: 740, h: 520 } },
-    { appId: "music", title: "Music", icon: "music", defaultSize: { w: 580, h: 640 } },
-];
 
 export function Desktop() {
     const { windows, closeActiveWindow, dragSnapPreview } = useWindowStore();

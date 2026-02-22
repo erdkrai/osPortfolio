@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, MotionValue } from "framer-motion";
 import { useWindowStore } from "@/store/windows";
 import { useSettingsStore, DockPosition } from "@/store/settings";
-import { AppConfig } from "./Desktop";
+import { AppConfig } from "@/data/apps";
 import { clsx } from "clsx";
 
 interface DockProps {
@@ -19,7 +19,7 @@ const DEFAULT_DISTANCE = 140;       // pixel range of the magnification field
 const DOCK_SPRING = { mass: 0.1, stiffness: 150, damping: 12 };
 
 // Function that generates dock icons with dynamic size
-const getDockIcons = (iconSizeClass: string): Record<string, React.ReactNode> => ({
+export const getDockIcons = (iconSizeClass: string): Record<string, React.ReactNode> => ({
     about: (
         <svg viewBox="0 0 48 48" fill="none" className={iconSizeClass}>
             <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#d-about)" />
@@ -188,6 +188,26 @@ const getDockIcons = (iconSizeClass: string): Record<string, React.ReactNode> =>
             <defs>
                 <linearGradient id="d-music" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
                     <stop stopColor="#e66100" /><stop offset="1" stopColor="#c64600" />
+                </linearGradient>
+            </defs>
+        </svg>
+    ),
+    shortcuts: (
+        <svg viewBox="0 0 48 48" fill="none" className={iconSizeClass}>
+            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#d-shortcuts)" />
+            <rect x="8" y="14" width="32" height="22" rx="3" fill="white" fillOpacity="0.92" />
+            <rect x="11" y="17" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="18" y="17" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="25" y="17" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="32" y="17" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="11" y="23" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="18" y="23" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="25" y="23" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="32" y="23" width="5" height="4" rx="1" fill="#5e5c64" />
+            <rect x="14" y="29" width="20" height="4" rx="1" fill="#5e5c64" />
+            <defs>
+                <linearGradient id="d-shortcuts" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#865e3c" /><stop offset="1" stopColor="#63452b" />
                 </linearGradient>
             </defs>
         </svg>
